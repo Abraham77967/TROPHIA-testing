@@ -1,0 +1,928 @@
+/* ==========================================================================
+   TROPHIA — PERFORMANCE TRIPTYCH DESIGN SYSTEM
+   ========================================================================== */
+
+/* Design Tokens & Theme Variables */
+:root {
+  --bg-dark: #07080a;
+  --bg-card: #111217;
+  --bg-card-hover: #15171d;
+  --bg-input: #0c0d10;
+  --border-subtle: rgba(255, 255, 255, 0.07);
+  
+  /* Precision Accent Colors */
+  --accent-cobalt: #2563eb;
+  --accent-cobalt-light: rgba(37, 99, 235, 0.12);
+  --accent-emerald: #10b981;
+  --accent-emerald-light: rgba(16, 185, 129, 0.12);
+  --accent-pink: #f43f5e;
+  
+  /* Text */
+  --text-main: #f9fafb;
+  --text-muted: #8a90a0;
+  --text-dark: #07080a;
+
+  /* Typography Fonts */
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-sans: 'Outfit', sans-serif;
+  --border-radius: 12px;
+  --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 1. Global Reset & Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  outline: none;
+}
+
+body {
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  overflow-x: hidden;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Container */
+.app-container {
+  max-width: 1680px;
+  margin: 0 auto;
+  padding: 2.5rem 2rem;
+  width: 100%;
+}
+
+#onboarding-screen {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Forms & inputs */
+.neon-input {
+  width: 100%;
+  background: var(--bg-input);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 0.65rem 0.9rem;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  color: var(--text-main);
+  transition: var(--transition);
+}
+.neon-input:focus {
+  border-color: var(--accent-cobalt);
+  background: #0d0e12;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+.neon-input.small {
+  padding: 0.45rem 0.75rem;
+  font-size: 0.8rem;
+  border-radius: 6px;
+}
+
+/* Hide spin-button (up/down arrows) globally */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* Cards */
+.glass-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--border-radius);
+  padding: 1.75rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  transition: var(--transition);
+  position: relative;
+}
+.glass-card:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.card-badge {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.65rem;
+  letter-spacing: 1.5px;
+  border-radius: 4px;
+  margin-bottom: 0.75rem;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
+  text-transform: uppercase;
+}
+
+/* Clean Button */
+.glow-button {
+  background: var(--text-main);
+  border: none;
+  border-radius: var(--border-radius);
+  color: var(--text-dark);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 0.75rem 1.75rem;
+  cursor: pointer;
+  transition: var(--transition);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+.glow-button:hover:not(:disabled) {
+  background: #ffffff;
+  transform: translateY(-1px);
+}
+.glow-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+.glow-button:disabled {
+  background: #1c1d24;
+  color: #464b58;
+  cursor: not-allowed;
+}
+
+/* Onboarding Screen */
+.hero-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+.logo-badge {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 4px;
+  margin-bottom: 0.5rem;
+  color: var(--accent-cobalt);
+}
+.hero-title {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin-bottom: 0.75rem;
+}
+.hero-subtitle {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  max-width: 600px;
+  margin: 0 auto;
+  font-weight: 300;
+}
+
+.view-panel {
+  display: none;
+  opacity: 0;
+}
+.view-panel.active {
+  display: block;
+  opacity: 1;
+}
+
+/* Onboarding grid structure */
+.onboarding-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+.step-num {
+  font-family: var(--font-display);
+  color: rgba(255, 255, 255, 0.03);
+  font-size: 2.25rem;
+  font-weight: 700;
+  position: absolute;
+  right: 1.5rem;
+  top: 0.75rem;
+}
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.form-group {
+  margin-bottom: 1.2rem;
+}
+.form-group label {
+  display: block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  margin-bottom: 0.4rem;
+  font-weight: 500;
+}
+.border-top {
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+/* Onboarding Anatomy Card Fixes */
+.anatomy-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.anatomy-view-wrapper {
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--border-radius);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  position: relative;
+  height: 380px; /* Locked box height */
+  overflow: hidden;
+}
+.view-controls {
+  position: absolute;
+  top: 0.75rem;
+  display: flex;
+  background: #181b22;
+  padding: 0.2rem;
+  border-radius: 30px;
+  border: 1px solid var(--border-subtle);
+  z-index: 100;
+}
+.pill-btn {
+  background: transparent;
+  border: none;
+  border-radius: 20px;
+  padding: 0.3rem 0.8rem;
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.pill-btn.active {
+  background: var(--text-main);
+  color: var(--text-dark);
+}
+
+.body-chart-container {
+  width: 100% !important;
+  height: 320px !important; /* Constrains height tightly */
+  max-height: 320px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+  margin-top: 1.5rem;
+}
+#anatomy-map-container .body-chart-container {
+  padding: 0 !important;
+  margin: 0 !important;
+  height: 100% !important;
+  width: 100% !important;
+  background: transparent !important;
+}
+#anatomy-map-container svg {
+  height: 100% !important;
+  width: auto !important;
+  max-height: 290px !important;
+  max-width: 100% !important;
+  filter: none !important;
+  display: block;
+}
+#anatomy-map-container path {
+  fill: #18191f !important;
+  stroke: #2c303d !important;
+  stroke-width: 0.15 !important;
+  transition: fill 0.2s ease, stroke 0.2s ease;
+}
+#anatomy-map-container path:hover {
+  fill: rgba(37, 99, 235, 0.25) !important;
+  stroke: var(--accent-cobalt) !important;
+}
+
+.selected-summary {
+  margin-top: 1.25rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-subtle);
+}
+.selected-summary .label {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 0.4rem;
+}
+.tag-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.muscle-tag {
+  background: rgba(37, 99, 235, 0.08);
+  color: var(--text-main);
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+.action-footer {
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+/* ==========================================================================
+   DASHBOARD HEADER
+   ========================================================================== */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 2rem;
+}
+.dashboard-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.logo-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-cobalt);
+}
+.logo-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: 2px;
+  line-height: 1.1;
+  color: #fff;
+}
+.logo-subtitle {
+  font-family: var(--font-sans);
+  font-size: 0.6rem;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+.user-status-strip {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.stats-line {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.02);
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-subtle);
+}
+.edit-link-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-main);
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  text-decoration: underline;
+  opacity: 0.7;
+  transition: var(--transition);
+}
+.edit-link-btn:hover {
+  opacity: 1;
+}
+
+/* ==========================================================================
+   PANORAMIC TRIPTYCH GRID (3 Equal side-by-side columns)
+   ========================================================================== */
+.dashboard-triptych-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  align-items: stretch; /* Forces equal heights perfectly */
+}
+
+.triptych-panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 720px; /* Absolute visual alignment guarantee */
+  padding: 2rem;
+}
+
+.panel-header-block {
+  margin-bottom: 1.25rem;
+}
+.panel-header-block h2 {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+.panel-header-block p {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* ──────── PANEL 1: NUTRITION DIAL & CHECKLISTS ──────── */
+
+/* Circular progress dial */
+.caloric-dial-container {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  margin: 1rem auto 2rem auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.caloric-svg-dial {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg); /* Start circular progress at top center */
+}
+.dial-track {
+  fill: transparent;
+  stroke: rgba(255, 255, 255, 0.025);
+  stroke-width: 5;
+}
+.dial-fill {
+  fill: transparent;
+  stroke: var(--accent-cobalt);
+  stroke-width: 5.5;
+  stroke-linecap: round;
+  stroke-dasharray: 251.2; /* 2 * PI * r (40) */
+  stroke-dashoffset: 251.2;
+  transition: stroke-dashoffset 0.4s cubic-bezier(0.4, 0, 0.2, 1), stroke 0.3s ease;
+}
+.dial-text-block {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+}
+.dial-kcal-number {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+}
+.dial-kcal-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.triptych-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  flex-grow: 1;
+  overflow-y: auto;
+  max-height: 360px;
+  padding-right: 0.2rem;
+  margin-bottom: 1rem;
+}
+.triptych-checklist::-webkit-scrollbar {
+  width: 3px;
+}
+.triptych-checklist::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 0.55rem 0.75rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.checkbox-item:hover {
+  background: rgba(255, 255, 255, 0.01);
+}
+.checkbox-item.checked {
+  border-color: var(--border-subtle);
+}
+.checkbox-item input[type="checkbox"] {
+  display: none;
+}
+.check-indicator {
+  width: 15px;
+  height: 15px;
+  border-radius: 4px;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  flex-shrink: 0;
+  position: relative;
+}
+.checkbox-item.checked .check-indicator {
+  background: var(--accent-cobalt);
+  border-color: var(--accent-cobalt);
+}
+.check-indicator::after {
+  content: "";
+  position: absolute;
+  width: 3px;
+  height: 5.5px;
+  border: solid #000;
+  border-width: 0 1.5px 1.5px 0;
+  transform: rotate(45deg);
+  top: 1.5px;
+  display: none;
+}
+.checkbox-item.checked .check-indicator::after {
+  display: block;
+}
+
+.fuel-text {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+.fuel-title {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-main);
+}
+.checkbox-item.checked .fuel-title {
+  color: var(--text-muted);
+  text-decoration: line-through;
+}
+.fuel-cal {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 0.1rem 0.3rem;
+  border-radius: 4px;
+  border: 1px solid var(--border-subtle);
+}
+
+.quick-calorie-input-row {
+  display: flex;
+  gap: 0.5rem;
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 0.75rem;
+}
+.quick-calorie-input-row .calc-input {
+  max-width: 70px;
+  text-align: center;
+}
+.add-fuel-btn {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text-main);
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 0 0.8rem;
+  cursor: pointer;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.add-fuel-btn:hover {
+  background: var(--text-main);
+  color: var(--text-dark);
+  border-color: var(--text-main);
+}
+
+/* ──────── PANEL 2: COMPACT WORKOUT SET TRACKING ──────── */
+.triptych-workout-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  flex-grow: 1;
+  overflow-y: auto;
+  max-height: 500px;
+  padding-right: 0.2rem;
+  margin-bottom: 1rem;
+}
+.triptych-workout-list::-webkit-scrollbar {
+  width: 3px;
+}
+.triptych-workout-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
+}
+
+.ex-triptych-row {
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  transition: var(--transition);
+}
+.ex-triptych-row.completed {
+  border-color: rgba(16, 185, 129, 0.15);
+  background: rgba(16, 185, 129, 0.01);
+}
+
+.ex-row-header-strip {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.ex-row-title-text {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 140px;
+}
+.ex-triptych-row.completed .ex-row-title-text {
+  color: var(--text-muted);
+  text-decoration: line-through;
+}
+.ex-row-presc-text {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+.ex-triptych-row.completed .ex-row-presc-text {
+  color: rgba(16, 185, 129, 0.5);
+}
+
+/* Set Circle Group Pickers */
+.ex-row-sets-picker-strip {
+  display: flex;
+  gap: 0.35rem;
+  align-items: center;
+}
+.set-circle-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+.set-circle-btn:hover {
+  border-color: var(--accent-cobalt);
+}
+.set-circle-btn.checked {
+  background: var(--accent-cobalt);
+  border-color: var(--accent-cobalt);
+  color: var(--text-dark);
+}
+.ex-triptych-row.completed .set-circle-btn.checked {
+  background: var(--accent-emerald);
+  border-color: var(--accent-emerald);
+}
+
+.triptych-workout-actions {
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 0.75rem;
+}
+.workout-submit-btn {
+  width: 100%;
+  background: var(--accent-emerald);
+  color: var(--text-dark);
+}
+.workout-submit-btn:hover:not(:disabled) {
+  background: var(--accent-emerald-hover);
+}
+
+/* ──────── PANEL 3: PERFORMANCE TRENDS & SPARK DETAILS ──────── */
+
+/* Tab navigation strip */
+.analytics-tabs-strip {
+  background: #181b22;
+  border: 1px solid var(--border-subtle);
+  border-radius: 20px;
+  padding: 0.2rem;
+  display: flex;
+  gap: 0.15rem;
+  margin-bottom: 1rem;
+}
+.analytics-tabs-strip .tab-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  border-radius: 16px;
+  padding: 0.5rem;
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: center;
+}
+.analytics-tabs-strip .tab-btn.active {
+  background: var(--text-main);
+  color: var(--text-dark);
+}
+
+/* Compact SVG Chart Frame */
+.triptych-chart-wrapper {
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--border-radius);
+  height: 180px; /* Taller high fidelity scale */
+  padding: 0.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+.chart-canvas {
+  width: 100%;
+  height: 100%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+.chart-canvas.active {
+  display: flex;
+}
+
+/* 2x2 stats metrics cells grid */
+.triptych-metrics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.45rem;
+  margin-bottom: 0.75rem;
+}
+.metric-cell {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 0.65rem 0.85rem;
+}
+.metric-cell-label {
+  display: block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  margin-bottom: 0.2rem;
+}
+.metric-cell-value {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* Log weight actions row */
+.triptych-actions-area {
+  min-height: 38px;
+  border-top: 1px dashed var(--border-subtle);
+  padding-top: 0.6rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.triptych-actions-area .input-group-row {
+  display: flex;
+  gap: 0.5rem;
+}
+.triptych-actions-area .action-btn {
+  background: var(--text-main);
+  border: none;
+  color: var(--text-dark);
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  border-radius: 6px;
+  padding: 0.45rem 1rem;
+  cursor: pointer;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.triptych-actions-area .action-btn:hover {
+  background: #ffffff;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.25);
+}
+
+/* Compact rules container at the bottom */
+.mini-principles-box {
+  margin-top: 0.75rem;
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 0.6rem;
+}
+.mini-principles-box h3 {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.principles-row {
+  display: flex;
+  gap: 0.5rem;
+}
+.principle-item {
+  display: flex;
+  gap: 0.25rem;
+  align-items: flex-start;
+  flex: 1;
+}
+.p-num {
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+.principle-item p {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  line-height: 1.2;
+}
+.principle-item strong {
+  color: var(--text-main);
+  display: block;
+}
+
+/* ==========================================================================
+   6. RESPONSIVENESS AND FALLBACK FOR TABLET / MOBILE
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .dashboard-triptych-grid {
+    grid-template-columns: 1fr; /* Stack vertically on small screens */
+    gap: 1.5rem;
+  }
+  .triptych-panel {
+    min-height: auto; /* Allow auto heights when stacked */
+  }
+}
+
+@media (max-width: 768px) {
+  .onboarding-grid {
+    grid-template-columns: 1fr;
+  }
+  .hero-title {
+    font-size: 1.75rem;
+  }
+  .app-container {
+    padding: 1.5rem 1rem;
+  }
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .user-status-strip {
+    width: 100%;
+    justify-content: space-between;
+  }
+}

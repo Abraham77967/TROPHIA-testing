@@ -53,11 +53,24 @@ body {
   margin: 0 auto;
   padding: 2.5rem 2rem;
   width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 #onboarding-screen {
   max-width: 1100px;
   margin: 0 auto;
+  overflow-y: auto;
+  flex: 1;
+}
+
+#dashboard-screen {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Forms & inputs */
@@ -411,21 +424,38 @@ input[type="number"] {
 }
 
 /* ==========================================================================
-   PANORAMIC TRIPTYCH GRID (3 Equal side-by-side columns)
+   ASYMMETRICAL BENTO GRID
    ========================================================================== */
-.dashboard-triptych-grid {
+.dashboard-bento-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1.6fr 1fr;
+  grid-template-rows: 1fr 1fr;
   gap: 2rem;
-  margin-bottom: 2rem;
-  align-items: stretch; /* Forces equal heights perfectly */
+  flex: 1;
+  min-height: 0;
 }
 
-.triptych-panel {
+.bento-panel {
   display: flex;
   flex-direction: column;
-  min-height: 720px; /* Absolute visual alignment guarantee */
   padding: 2rem;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.panel-training {
+  grid-column: 1 / 2;
+  grid-row: 1 / 3;
+}
+
+.panel-analytics {
+  grid-column: 2 / 3;
+  grid-row: 1 / 2;
+}
+
+.panel-nutrition {
+  grid-column: 2 / 3;
+  grid-row: 2 / 3;
 }
 
 .panel-header-block {
@@ -493,20 +523,20 @@ input[type="number"] {
   letter-spacing: 0.5px;
 }
 
-.triptych-checklist {
+.bento-checklist {
   display: flex;
   flex-direction: column;
   gap: 0.45rem;
   flex-grow: 1;
-  overflow-y: auto;
-  max-height: 360px;
   padding-right: 0.2rem;
   margin-bottom: 1rem;
+  overflow-y: auto;
+  min-height: 0;
 }
-.triptych-checklist::-webkit-scrollbar {
+.bento-checklist::-webkit-scrollbar {
   width: 3px;
 }
-.triptych-checklist::-webkit-scrollbar-thumb {
+.bento-checklist::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.08);
   border-radius: 2px;
 }
@@ -618,20 +648,20 @@ input[type="number"] {
 }
 
 /* ──────── PANEL 2: COMPACT WORKOUT SET TRACKING ──────── */
-.triptych-workout-list {
+.bento-workout-list {
   display: flex;
   flex-direction: column;
   gap: 0.55rem;
   flex-grow: 1;
-  overflow-y: auto;
-  max-height: 500px;
   padding-right: 0.2rem;
   margin-bottom: 1rem;
+  overflow-y: auto;
+  min-height: 0;
 }
-.triptych-workout-list::-webkit-scrollbar {
+.bento-workout-list::-webkit-scrollbar {
   width: 3px;
 }
-.triptych-workout-list::-webkit-scrollbar-thumb {
+.bento-workout-list::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.08);
   border-radius: 2px;
 }
@@ -712,7 +742,7 @@ input[type="number"] {
   border-color: var(--accent-emerald);
 }
 
-.triptych-workout-actions {
+.bento-workout-actions {
   border-top: 1px solid var(--border-subtle);
   padding-top: 0.75rem;
 }
@@ -757,7 +787,7 @@ input[type="number"] {
 }
 
 /* Compact SVG Chart Frame */
-.triptych-chart-wrapper {
+.bento-chart-wrapper {
   background: var(--bg-input);
   border: 1px solid var(--border-subtle);
   border-radius: var(--border-radius);
@@ -781,7 +811,7 @@ input[type="number"] {
 }
 
 /* 2x2 stats metrics cells grid */
-.triptych-metrics-grid {
+.bento-metrics-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.45rem;
@@ -809,7 +839,7 @@ input[type="number"] {
 }
 
 /* Log weight actions row */
-.triptych-actions-area {
+.bento-actions-area {
   min-height: 38px;
   border-top: 1px dashed var(--border-subtle);
   padding-top: 0.6rem;
@@ -817,11 +847,11 @@ input[type="number"] {
   flex-direction: column;
   justify-content: center;
 }
-.triptych-actions-area .input-group-row {
+.bento-actions-area .input-group-row {
   display: flex;
   gap: 0.5rem;
 }
-.triptych-actions-area .action-btn {
+.bento-actions-area .action-btn {
   background: var(--text-main);
   border: none;
   color: var(--text-dark);
@@ -837,7 +867,7 @@ input[type="number"] {
   align-items: center;
   justify-content: center;
 }
-.triptych-actions-area .action-btn:hover {
+.bento-actions-area .action-btn:hover {
   background: #ffffff;
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.25);
 }
@@ -897,13 +927,13 @@ input[type="number"] {
    6. RESPONSIVENESS AND FALLBACK FOR TABLET / MOBILE
    ========================================================================== */
 @media (max-width: 1024px) {
-  .dashboard-triptych-grid {
+  .dashboard-bento-grid {
     grid-template-columns: 1fr; /* Stack vertically on small screens */
     gap: 1.5rem;
   }
-  .triptych-panel {
-    min-height: auto; /* Allow auto heights when stacked */
-  }
+  .panel-training { grid-column: auto; grid-row: auto; }
+  .panel-analytics { grid-column: auto; grid-row: auto; }
+  .panel-nutrition { grid-column: auto; grid-row: auto; }
 }
 
 @media (max-width: 768px) {

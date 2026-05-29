@@ -131,11 +131,66 @@
             </div>
           </header>
 
-          <!-- PANORAMIC TRIPTYCH GRID (3 Equal Panels Side-By-Side) -->
-          <div class="dashboard-triptych-grid">
+          <!-- ASYMMETRIC BENTO GRID -->
+          <div class="dashboard-bento-grid">
             
-            <!-- PANEL 1: NUTRITION surplus -->
-            <div class="glass-card triptych-panel panel-nutrition">
+            <!-- PANEL 1 (WIDE): TRAINING ROUTINE -->
+            <div class="glass-card bento-panel panel-training">
+              <div class="card-badge">Routine • <span id="workout-completion-percentage">0%</span></div>
+              <div class="panel-header-block">
+                <h2 id="routine-focus-title">Daily Routine</h2>
+                <p>Check off sets to advance progressions.</p>
+              </div>
+
+              <!-- Sleek training sets row picker list -->
+              <div id="workout-list-container" class="bento-workout-list">
+                <!-- Sleek exercise rows inject here -->
+              </div>
+
+              <div class="bento-workout-actions">
+                <button id="btn-complete-workout" class="glow-button workout-submit-btn" disabled>
+                  Log Workout
+                </button>
+              </div>
+            </div>
+
+            <!-- PANEL 2 (SIDEBAR TOP): PERFORMANCE TRENDS -->
+            <div class="glass-card bento-panel panel-analytics">
+              <div class="card-badge">Analytics</div>
+              
+              <!-- Tab Controls -->
+              <div class="analytics-tabs-strip">
+                <button type="button" class="tab-btn active" data-tab="weight">Weight</button>
+                <button type="button" class="tab-btn" data-tab="workout">Reps</button>
+                <button type="button" class="tab-btn" data-tab="nutrition">Calories</button>
+              </div>
+
+              <!-- Graph Canvas -->
+              <div class="bento-chart-wrapper">
+                <div id="weight-chart-container" class="chart-canvas active">
+                  <!-- SVG weight chart -->
+                </div>
+                <div id="workout-chart-container" class="chart-canvas">
+                  <!-- SVG reps progress chart -->
+                </div>
+                <div id="nutrition-chart-container" class="chart-canvas">
+                  <!-- SVG intake surplus chart -->
+                </div>
+              </div>
+
+              <!-- 2x2 Details Grid -->
+              <div id="analytics-info-grid" class="bento-metrics-grid">
+                <!-- dynamic 2x2 metric cells injected here -->
+              </div>
+
+              <!-- Dynamic actions bar under metrics -->
+              <div id="analytics-actions-container" class="bento-actions-area">
+                <!-- Input rows dynamically injects here -->
+              </div>
+            </div>
+
+            <!-- PANEL 3 (SIDEBAR BOTTOM): NUTRITION -->
+            <div class="glass-card bento-panel panel-nutrition">
               <div class="card-badge">Nutrition</div>
               <div class="panel-header-block">
                 <h2>Nutrition surplus</h2>
@@ -157,7 +212,7 @@
               </div>
 
               <!-- Checkbox List -->
-              <form id="fuel-checklist-form" class="triptych-checklist">
+              <form id="fuel-checklist-form" class="bento-checklist">
                 <div id="fuel-items-container">
                   <!-- checklist row items injected here -->
                 </div>
@@ -171,62 +226,7 @@
               </div>
             </div>
 
-            <!-- PANEL 2: TRAINING ROUTINE -->
-            <div class="glass-card triptych-panel panel-training">
-              <div class="card-badge">Routine • <span id="workout-completion-percentage">0%</span></div>
-              <div class="panel-header-block">
-                <h2 id="routine-focus-title">Daily Routine</h2>
-                <p>Check off sets to advance progressions.</p>
-              </div>
-
-              <!-- Sleek training sets row picker list -->
-              <div id="workout-list-container" class="triptych-workout-list">
-                <!-- Sleek exercise rows inject here -->
-              </div>
-
-              <div class="triptych-workout-actions">
-                <button id="btn-complete-workout" class="glow-button workout-submit-btn" disabled>
-                  Log Workout
-                </button>
-              </div>
-            </div>
-
-            <!-- PANEL 3: PERFORMANCE TRENDS -->
-            <div class="glass-card triptych-panel panel-analytics">
-              <div class="card-badge">Analytics</div>
-              
-              <!-- Tab Controls -->
-              <div class="analytics-tabs-strip">
-                <button type="button" class="tab-btn active" data-tab="weight">Weight</button>
-                <button type="button" class="tab-btn" data-tab="workout">Reps</button>
-                <button type="button" class="tab-btn" data-tab="nutrition">Calories</button>
-              </div>
-
-              <!-- Graph Canvas -->
-              <div class="triptych-chart-wrapper">
-                <div id="weight-chart-container" class="chart-canvas active">
-                  <!-- SVG weight chart -->
-                </div>
-                <div id="workout-chart-container" class="chart-canvas">
-                  <!-- SVG reps progress chart -->
-                </div>
-                <div id="nutrition-chart-container" class="chart-canvas">
-                  <!-- SVG intake surplus chart -->
-                </div>
-              </div>
-
-              <!-- 2x2 Details Grid -->
-              <div id="analytics-info-grid" class="triptych-metrics-grid">
-                <!-- dynamic 2x2 metric cells injected here -->
-              </div>
-
-              <!-- Dynamic actions bar under metrics -->
-              <div id="analytics-actions-container" class="triptych-actions-area">
-                <!-- Input rows dynamically injects here -->
-              </div>
-            </div>
-
-          </div> <!-- END PANORAMIC TRIPTYCH -->
+          </div> <!-- END BENTO GRID -->
 
         </section>
 

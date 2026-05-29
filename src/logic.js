@@ -399,3 +399,29 @@ export function progressExercise(exercise) {
   
   return updated;
 }
+
+/**
+ * Calculate dynamic calorie target based on user profile
+ * @param {Object} profile - { heightFt, heightIn, weight }
+ * @returns {Number} Dynamic calorie target
+ */
+export function calculateCalorieTarget(profile) {
+  if (!profile || !profile.weight) return 2500;
+  
+  const heightInches = (parseInt(profile.heightFt) * 12) + parseInt(profile.heightIn);
+  const weightLbs = parseFloat(profile.weight);
+  const bmi = heightInches > 0 ? ((weightLbs * 703) / (heightInches * heightInches)) : 0;
+  
+  const tdee = Math.round(weightLbs * 15);
+  
+  if (bmi < 18.5) {
+    // Lean Bulk Phase (same logic as main.js dashboard header)
+    return tdee + 300;
+  } else if (bmi >= 18.5 && bmi < 25) {
+    // Recomposition Phase
+    return tdee;
+  } else {
+    // Caloric Deficit Phase
+    return tdee - 500;
+  }
+}

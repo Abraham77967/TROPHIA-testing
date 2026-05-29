@@ -7,7 +7,7 @@
 import './style.css';
 import { BodyChart, ViewSide } from 'body-muscles';
 import { StorageService } from './storage.js';
-import { generateWorkoutRoutine, progressExercise, MUSCLE_TO_CATEGORY_MAP } from './logic.js';
+import { generateWorkoutRoutine, progressExercise, MUSCLE_TO_CATEGORY_MAP, calculateCalorieTarget } from './logic.js';
 
 // Application State
 const state = {
@@ -94,11 +94,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
 // Load state from local storage
 function loadSavedData() {
-  // Automatically detect and purge old fake stock seed data
-  const wHist = StorageService.getWeightHistory();
-  if (wHist.length > 0 && wHist.some(log => log.date.includes('May'))) {
-    StorageService.clearHistory();
-  }
 
   state.profile = StorageService.getProfile();
   state.workout = StorageService.getWorkoutState() || [];
@@ -144,7 +139,7 @@ function showDashboard() {
   
   // Calibrate workout setsChecked states defensively
   state.workout.forEach(ex => {
-    ex.setsChecked = ex.setsChecked || [false, false, false];
+    ex.setsChecked = ex.setsChecked || Array(ex.sets).fill(false);
   });
   
   renderDashboardHeader();
@@ -227,7 +222,7 @@ function renderWorkoutRoutine() {
   let completedCount = 0;
   
   state.workout.forEach((ex, exIndex) => {
-    ex.setsChecked = ex.setsChecked || [false, false, false];
+    ex.setsChecked = ex.setsChecked || Array(ex.sets).fill(false);
     
     const isCompleted = ex.setsChecked.every(s => s === true);
     ex.completedToday = isCompleted;
@@ -242,9 +237,9 @@ function renderWorkoutRoutine() {
         <span class="ex-row-presc-text">${ex.sets}s x ${ex.reps} ${ex.unit}</span>
       </div>
       <div class="ex-row-sets-picker-strip">
-        <button type="button" class="set-circle-btn ${ex.setsChecked[0] ? 'checked' : ''}" data-ex="${exIndex}" data-set="0">1</button>
-        <button type="button" class="set-circle-btn ${ex.setsChecked[1] ? 'checked' : ''}" data-ex="${exIndex}" data-set="1">2</button>
-        <button type="button" class="set-circle-btn ${ex.setsChecked[2] ? 'checked' : ''}" data-ex="${exIndex}" data-set="2">3</button>
+        ${Array.from({length: ex.sets}).map((_, sIdx) => `
+          <button type="button" class="set-circle-btn ${ex.setsChecked[sIdx] ? 'checked' : ''}" data-ex="${exIndex}" data-set="${sIdx}">${sIdx + 1}</button>
+        `).join('')}
       </div>
     `;
     
@@ -311,12 +306,13 @@ function renderFuelChecklist() {
         <span class="fuel-title">${item.name}</span>
       </div>
       <span class="fuel-cal">+${item.calories}</span>
+      ${item.id && item.id.startsWith('fuel_custom_') ? `<span class="delete-fuel-btn" data-index="${index}" style="margin-left:8px; color:var(--accent-pink); font-size:1.1rem; cursor:pointer;" title="Delete item">&times;</span>` : ''}
     `;
     
     DOM.fuelItemsContainer.appendChild(div);
   });
   
-  const surplusTarget = 2500;
+  const surplusTarget = calculateCalorieTarget(state.profile);
   const fillPct = Math.min(100, Math.round((currentCalories / surplusTarget) * 100));
   
   const circumference = 251.2;
@@ -344,6 +340,19 @@ function renderFuelChecklist() {
       StorageService.saveDailyFuel(state.fuel);
       renderFuelChecklist();
       
+      if (state.activeAnalyticsTab === 'nutrition') {
+        renderAnalyticsHub();
+      }
+    });
+  });
+
+  DOM.fuelItemsContainer.querySelectorAll('.delete-fuel-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const idx = parseInt(e.currentTarget.getAttribute('data-index'));
+      state.fuel.items.splice(idx, 1);
+      StorageService.saveDailyFuel(state.fuel);
+      renderFuelChecklist();
       if (state.activeAnalyticsTab === 'nutrition') {
         renderAnalyticsHub();
       }
@@ -586,7 +595,7 @@ function plotCaloricIntakeGraph() {
     dataPoints = history;
   }
   
-  const target = 2500;
+  const target = calculateCalorieTarget(state.profile);
   const maxCals = Math.max(target, Math.max(...dataPoints.map(h => h.calories)) + 300);
   
   const barWidth = 18;
@@ -722,22 +731,36 @@ function renderNutritionDetails() {
   
   let totalCals = 0;
   let successCount = 0;
+  const target = calculateCalorieTarget(state.profile);
+  
+  const p = state.profile;
+  const heightInches = p ? (parseInt(p.heightFt) * 12) + parseInt(p.heightIn) : 0;
+  const weightLbs = p ? parseFloat(p.weight) : 0;
+  const bmi = heightInches > 0 ? ((weightLbs * 703) / (heightInches * heightInches)) : 0;
+  const isDeficit = bmi > 25; 
+
   history.forEach(h => {
     totalCals += h.calories;
-    if (h.calories >= 2500) successCount++;
+    if (isDeficit) {
+      if (h.calories <= target) successCount++;
+    } else {
+      if (h.calories >= target) successCount++;
+    }
   });
   
   const avgCals = totalDaysLog > 0 ? Math.round(totalCals / totalDaysLog) : 0;
   const pctSuccess = totalDaysLog > 0 ? Math.round((successCount / totalDaysLog) * 100) : 0;
+  const tdee = Math.round(weightLbs * 15);
+  const avgSurplus = avgCals - tdee;
   
   DOM.analyticsInfoGrid.innerHTML = `
     <div class="metric-cell">
       <span class="metric-cell-label">Surplus Avg</span>
-      <span class="metric-cell-value">${avgCals} kcal</span>
+      <span class="metric-cell-value">${avgSurplus >= 0 ? '+' : ''}${avgSurplus} kcal</span>
     </div>
     <div class="metric-cell">
-      <span class="metric-cell-label">Surplus Target</span>
-      <span class="metric-cell-value">2,500 kcal</span>
+      <span class="metric-cell-label">Daily Target</span>
+      <span class="metric-cell-value">${target} kcal</span>
     </div>
     <div class="metric-cell">
       <span class="metric-cell-label">Achievement</span>
@@ -810,21 +833,30 @@ function registerGlobalEvents() {
   DOM.btnCompleteWorkout.addEventListener('click', () => {
     if (state.workout.length === 0) return;
     
+    const pct = parseInt(DOM.workoutProgressRing.textContent) || 0;
+    const isPerfect = pct === 100;
+    
     let sumReps = 0;
     state.workout.forEach(ex => {
-      if (ex.unit === 'seconds') {
-        sumReps += Math.round(ex.reps / 5);
-      } else {
-        sumReps += parseInt(ex.reps) || 5;
+      // Only add to daily volume if the specific exercise was completed
+      if (ex.completedToday) {
+        if (ex.unit === 'seconds') {
+          sumReps += Math.round(ex.reps / 5);
+        } else {
+          sumReps += parseInt(ex.reps) || 5;
+        }
       }
     });
     
+    // Always add a history log if they clicked log, but with 0 volume if they skipped everything
     StorageService.addWorkoutHistoryLog(sumReps);
     
     const progressedWorkout = state.workout.map(ex => {
-      const advanced = progressExercise(ex);
-      advanced.setsChecked = [false, false, false]; // Reset checked circles
-      return advanced;
+      // Only progress the weights/reps if they completed the whole routine perfectly
+      const nextEx = isPerfect ? progressExercise(ex) : { ...ex };
+      nextEx.setsChecked = Array(nextEx.sets || 3).fill(false);
+      nextEx.completedToday = false;
+      return nextEx;
     });
     StorageService.saveWorkoutState(progressedWorkout);
     
@@ -835,7 +867,7 @@ function registerGlobalEvents() {
     banner.style.transform = 'translate(-50%, -50%)';
     banner.style.background = 'var(--bg-card)';
     banner.style.color = 'var(--text-main)';
-    banner.style.border = '1px solid var(--accent-emerald)';
+    banner.style.border = `1px solid ${isPerfect ? 'var(--accent-emerald)' : 'var(--accent-pink)'}`;
     banner.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.4)';
     banner.style.padding = '1rem 2rem';
     banner.style.borderRadius = 'var(--border-radius)';
@@ -844,7 +876,12 @@ function registerGlobalEvents() {
     banner.style.fontSize = '1rem';
     banner.style.zIndex = '9999';
     banner.style.textAlign = 'center';
-    banner.innerHTML = 'Workout Logged Successfully<br><span style="font-size: 0.8rem; font-weight: 400; color: var(--text-muted);">Progression advanced. Sets incremented by +1 rep.</span>';
+    
+    if (isPerfect) {
+      banner.innerHTML = 'Workout Logged Successfully<br><span style="font-size: 0.8rem; font-weight: 400; color: var(--text-muted);">Progression advanced. Sets incremented by +1 rep.</span>';
+    } else {
+      banner.innerHTML = `Partial Workout Saved<br><span style="font-size: 0.8rem; font-weight: 400; color: var(--text-muted);">Progression paused. Try to hit 100% next time!</span>`;
+    }
     
     document.body.appendChild(banner);
     
@@ -853,11 +890,6 @@ function registerGlobalEvents() {
       banner.style.transition = 'opacity 0.4s ease';
       setTimeout(() => banner.remove(), 400);
     }, 2800);
-    
-    if (state.fuel) {
-      state.fuel.items = state.fuel.items.map(item => ({ ...item, completed: false }));
-      StorageService.saveDailyFuel(state.fuel);
-    }
     
     loadSavedData();
     showDashboard();
